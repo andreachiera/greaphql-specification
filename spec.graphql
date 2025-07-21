@@ -22,8 +22,6 @@ type Post {
   content: String!
   author: User!
   createdAt: String! # Using String to represent the date
-  comments: [Comment!]!
-  likes: [Like!]!
 }
  
 # Comment type with fields
