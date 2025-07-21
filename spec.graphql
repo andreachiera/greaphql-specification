@@ -12,7 +12,6 @@ type User {
   email: String!
   createdAt: String! # Using String to represent the date
   role: UserRole!
-  posts: [Post!]!
   friends: [User!]!
 }
  
