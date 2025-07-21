@@ -1,0 +1,125 @@
+# Enum for User roles
+enum UserRole {
+  ADMIN
+  USER
+  MODERATOR
+}
+ 
+# User type with fields
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  createdAt: String! # Using String to represent the date
+  role: UserRole!
+  posts: [Post!]!
+  comments: [Comment!]!
+  friends: [User!]!
+}
+ 
+# Post type with fields
+type Post {
+  id: ID!
+  title: String!
+  content: String!
+  author: User!
+  createdAt: String! # Using String to represent the date
+  comments: [Comment!]!
+  likes: [Like!]!
+}
+ 
+# Comment type with fields
+type Comment {
+  id: ID!
+  content: String!
+  author: User!
+  post: Post!
+  createdAt: String! # Using String to represent the date
+}
+ 
+# Like type that associates Users with Posts
+type Like {
+  id: ID!
+  user: User!
+  post: Post!
+  createdAt: String! # Using String to represent the date
+}
+ 
+# Friendship type to represent connections between users
+type Friendship {
+  id: ID!
+  requester: User!
+  recipient: User!
+  status: FriendshipStatus!
+  createdAt: String! # Using String to represent the date
+}
+ 
+# Enum for Friendship status
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+ 
+# Root Query type
+type Query {
+  # Fetch all users
+  users: [User!]!
+ 
+  # Fetch a user by ID
+  user(id: ID!): User
+ 
+  # Fetch all posts
+  posts: [Post!]!
+ 
+  # Fetch a post by ID
+  post(id: ID!): Post
+ 
+  # Search posts by title
+  searchPostsByTitle(title: String!): [Post!]!
+ 
+  # Fetch comments by post ID
+  commentsByPost(postId: ID!): [Comment!]!
+ 
+  # Fetch friend list of a user
+  friends(userId: ID!): [User!]!
+}
+ 
+# Root Mutation type
+type Mutation {
+  # Create a new user
+  createUser(username: String!, email: String!, role: UserRole!): User!
+ 
+  # Create a new post
+  createPost(title: String!, content: String!, authorId: ID!): Post!
+ 
+  # Add a comment to a post
+  addComment(content: String!, authorId: ID!, postId: ID!): Comment!
+ 
+  # Like a post
+  likePost(userId: ID!, postId: ID!): Like!
+ 
+  # Send a friendship request
+  sendFriendRequest(requesterId: ID!, recipientId: ID!): Friendship!
+ 
+  # Accept a friendship request
+  acceptFriendRequest(friendshipId: ID!): Friendship!
+ 
+  # Decline a friendship request
+  declineFriendRequest(friendshipId: ID!): Friendship!
+}
+ 
+# Subscription type for real-time updates
+type Subscription {
+  # Listen for new posts
+  postCreated: Post!
+ 
+  # Listen for new comments on a specific post
+  commentAdded(postId: ID!): Comment!
+ 
+  # Listen for new like events
+  likeAdded(postId: ID!): Like!
+ 
+  # Listen for changes in friendship status
+  friendshipStatusChanged(userId: ID!): Friendship!
+}
